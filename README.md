@@ -19,6 +19,23 @@
 
 ---
 
+## 라이브 그래프 (실시간 갱신)
+
+![스크린샷](assets/live_graph.gif)
+
+
+## 캐릭터 추가
+
+![스크린샷](assets/add_character.gif)
+
+
+## 주차 변경
+
+![스크린샷](assets/weekchange.gif)
+
+
+---
+
 ## 기술 스택
 
 | 분류 | 기술 |
@@ -60,24 +77,9 @@
 ```
 
 ### 데이터 흐름
+
 ![스크린샷](assets/diagram.png)
-```
-사용자 입력
-    │
-    ├─ 캐릭터 추가 ──→ Nexon API ──→ SQLite (characters)
-    │
-    ├─ 보스 체크 ────→ SQLite (weekly_checks)  ← 실시간 쓰기
-    │
-    └─ 보스 시세 변경 → SQLite (boss_list, boss_price_history)
-                        │
-                        │  통계 탭 진입 시 snapshot()
-                        ▼
-                  Parquet 스냅샷
-                        │
-                        │  read_parquet() + Polars 집계
-                        ▼
-                  BI 대시보드 차트
-```
+
 
 ---
 
