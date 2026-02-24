@@ -1,0 +1,5 @@
+__pycache__/
+venv/
+boss_data.db-shm
+boss_data.db-wal
+stats_snapshot.parquet

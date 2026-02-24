@@ -1,0 +1,157 @@
+/* ===========================
+   전체 윈도우 배경
+   =========================== */
+QWidget {
+    background-color: #f5f5f5;
+	font-size: 12px;
+    color: #333333;
+    font-family: "Noto Sans KR", "Segoe UI", Arial, sans-serif;
+}
+
+/* ===========================
+   QLabel 공통
+   =========================== */
+QLabel {
+    font-size: 14px;
+    font-weight: normal;
+    color: #333333;
+}
+
+/* 오늘 날짜 / 주차 라벨 */
+QLabel#lbl_date_week {
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff; /* 차분한 파랑 */
+    margin-bottom: 10px;
+}
+
+/* 캐릭터 총합 라벨 */
+QLabel#char_total_label {
+    font-size: 15px;
+    font-weight: bold;
+    color: #212529;
+}
+
+/* ===========================
+   QPushButton 공통
+   =========================== */
+QPushButton {
+    background-color: #6c757d; /* 회색 버튼 */
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    padding: 6px 12px;
+}
+
+QPushButton:hover {
+    background-color: #5a6268;
+}
+
+QPushButton:pressed {
+    background-color: #495057;
+}
+
+/* 강조 버튼 (새로고침, 추가 버튼 등) */
+QPushButton#btn_refresh_info,
+QPushButton#btn_add_char,
+QPushButton#btn_add_char_boss,
+QPushButton#btn_add_boss {
+    background-color: #007bff;
+}
+
+QPushButton#btn_refresh_info:hover,
+QPushButton#btn_add_char:hover,
+QPushButton#btn_add_char_boss:hover,
+QPushButton#btn_add_boss:hover {
+    background-color: #0069d9;
+}
+
+QPushButton#btn_refresh_info:pressed,
+QPushButton#btn_add_char:pressed,
+QPushButton#btn_add_char_boss:pressed,
+QPushButton#btn_add_boss:pressed {
+    background-color: #0056b3;
+}
+
+/* ===========================
+   QGroupBox 공통
+   =========================== */
+QGroupBox {
+    font-weight: bold;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    margin-top: 8px;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 0 3px;
+}
+
+/* 체크리스트, 전역 보스 관리 등 구분 가능 */
+QGroupBox#checklist_group {
+    border-color: #ced4da;
+}
+
+QGroupBox#stats_group {
+    border-color: #ced4da;
+}
+
+QGroupBox#global_boss_group {
+    border-color: #ced4da;
+}
+
+/* ===========================
+   QLineEdit, QSpinBox
+   =========================== */
+QLineEdit, QSpinBox {
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: #ffffff;
+}
+
+QLineEdit:focus, QSpinBox:focus {
+    border-color: #007bff;
+}
+
+/* ===========================
+   QComboBox
+   =========================== */
+QComboBox {
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: #ffffff;
+}
+
+QComboBox:focus {
+    border-color: #007bff;
+}
+
+/* ===========================
+   QLabel 이미지 (캐릭터 이미지)
+   =========================== */
+QLabel#char_image_label {
+    border: 1px solid #adb5bd;
+    background-color: #e9ecef;
+}
+
+/* ===========================
+   QListWidget (보스 리스트 등)
+   =========================== */
+QListWidget {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 4px;
+    background-color: #ffffff;
+}
+
+/* 선택 시 색상 */
+QListWidget::item:selected {
+    background-color: #007bff;
+    color: white;
+}

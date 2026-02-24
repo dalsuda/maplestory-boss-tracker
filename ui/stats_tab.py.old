@@ -1,0 +1,89 @@
+"""
+누적 수익 통계 탭.
+ParquetStore + Polars 기반으로 집계.
+"""
+
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QSizePolicy
+from PySide6.QtCharts import QChart, QChartView, QBarSeries, QBarSet, QBarCategoryAxis, QValueAxis
+from PySide6.QtGui import QPainter, QCursor
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QToolTip
+
+from data_layer import ParquetStore
+from utils import format_currency_ko
+
+
+class StatsTab(QWidget):
+    """누적 수익 통계 탭."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._store = ParquetStore()
+        self._layout = QVBoxLayout(self)
+
+    def refresh(self) -> None:
+        """체크 상태 변경 후 Parquet 스냅샷을 갱신하고 탭을 재렌더링."""
+        self._store.snapshot()  # SQLite → Parquet 동기화
+        self._clear()
+
+        accumulated = self._store.accumulated_total()
+        week_summaries = self._store.weekly_totals()  # [{"week_key", "total"}, ...]
+
+        # 누적 수익 라벨
+        lbl = QLabel(f"전체 누적 수익: {format_currency_ko(accumulated)}")
+        lbl.setStyleSheet("font-size:16px; font-weight:bold; color:#23A559; margin-bottom:6px;")
+        lbl.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        self._layout.addWidget(lbl)
+
+        if week_summaries:
+            self._layout.addWidget(self._build_bar_chart(week_summaries))
+
+    # ------------------------------------------------------------------
+    # private
+    # ------------------------------------------------------------------
+
+    def _clear(self) -> None:
+        for i in reversed(range(self._layout.count())):
+            w = self._layout.itemAt(i).widget()
+            if w:
+                w.setParent(None)
+
+    def _build_bar_chart(self, week_summaries: list[dict]) -> QChartView:
+        labels = [f"{i}주" for i in range(1, len(week_summaries) + 1)]
+        values_eok = [row["total"] / 100_000_000 for row in week_summaries]
+
+        bar_set = QBarSet("총 수익")
+        bar_set.append(values_eok)
+        bar_set.hovered.connect(
+            lambda status, idx: self._on_bar_hover(status, idx, values_eok)
+        )
+
+        series = QBarSeries()
+        series.append(bar_set)
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle("주차별 수익 추이 (억 단위)")
+        chart.setAnimationOptions(QChart.SeriesAnimations)
+
+        axis_x = QBarCategoryAxis()
+        axis_x.append(labels)
+        chart.addAxis(axis_x, Qt.AlignBottom)
+        series.attachAxis(axis_x)
+
+        axis_y = QValueAxis()
+        axis_y.setLabelFormat("%.1f")
+        axis_y.setTickCount(6)
+        chart.addAxis(axis_y, Qt.AlignLeft)
+        series.attachAxis(axis_y)
+
+        view = QChartView(chart)
+        view.setRenderHint(QPainter.Antialiasing)
+        return view
+
+    @staticmethod
+    def _on_bar_hover(status: bool, index: int, values: list[float]) -> None:
+        if status:
+            QToolTip.showText(QCursor.pos(), f"{values[index]:.2f}억 원")
+        else:
+            QToolTip.hideText()

@@ -1,0 +1,1 @@
+from ui.widgets.character_sidebar import CharacterSidebar
